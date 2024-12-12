@@ -69,7 +69,7 @@ class RegistrationSystem:
         course.add_student(student)
         student.courses.append(course)
         student.balance += course.fee
-        print(f"Student '{student.name}' enrolled in '{course.name}' balance: '{student.balance}'.")
+        print(f"Student '{student.name}' enrolled in '{course.name}' balance: $'{student.balance}'.")
 
     def calculate_payment(self):
         student_id = input("Enter Student ID: ")
@@ -83,7 +83,7 @@ class RegistrationSystem:
             print("Error: Payment must be at least 40% of the outstanding balance.")
             return
         student.balance -= payment
-        print(f"Payment successful. Remaining balance: {student.balance}")
+        print(f"Payment successful. Remaining balance: ${student.balance}")
 
     def show_courses(self):
         if not self.courses:
@@ -91,7 +91,7 @@ class RegistrationSystem:
             return
         print("Available Courses:")
         for course in self.courses:
-            print(f"{course.course_id} - {course.name} (Fee: {course.fee})")
+            print(f"{course.course_id} - {course.name} (Fee: ${course.fee})")
 
     # Main menu
     def show_menu(self):
