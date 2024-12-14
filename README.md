@@ -6,7 +6,7 @@ iii.	Course: Programming Techniques ITT103
 iV. 	GitHub Public URL to Code:https://github.com/Nzinga-coder2/Lloyd.Nzinga-Course_Registration-ITT103-F2024.py.git
 
 2. 
-Program purpose
+Program Purpose
 The program's goal is to give administrators the ability to build courses with their own descriptions, which include the course name, code, and price. Additionally, the platform will enable administrative personnel to establish student profiles that contain the student's name, ID, and email address. 
 
 Students can also use the program to track their balance owed to the institution and enroll in classes. Payments made by the student after enrollment must equal at least 40% of the remaining debt; else, an error message will appear.
