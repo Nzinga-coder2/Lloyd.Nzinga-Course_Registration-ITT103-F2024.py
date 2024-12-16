@@ -1,32 +1,47 @@
-students = {}  # {student_id: {"name": name, "courses": {course_id: balance}}}
-courses = {}   # {course_id: {"name": name, "fee": fee}}
+import re
 
-# OOP principles
 class Course:
     def __init__(self, course_id, name, fee):
-        self.course_id = course_id  # Unique identifier for each course
-        self.name = name            # Name of the course
-        self.fee = fee              # Cost of the course
-        self.students = []          # List of enrolled students
+        self.course_id = course_id
+        self.name = name
+        self.fee = fee
+        self.students = []
 
     def add_student(self, student):
-        self.students.append(student)  # Add a student to the course
+        self.students.append(student)
         return True
 
+    def remove_student(self, student):
+        if student in self.students:
+            self.students.remove(student)
+            return True
+        return False
 
 class Student:
     def __init__(self, student_id, name, email, courses=None, balance=0):
-        self.student_id = student_id  # Unique identifier for each student
-        self.name = name              # Student's name
-        self.email = email            # Contact email
-        self.courses = courses if courses else []  # List of enrolled courses
-        self.balance = balance        # Current balance
+        self.student_id = student_id
+        self.name = name
+        self.email = email
+        self.courses = courses if courses else []
+        self.balance = balance
 
+    def enroll_in_course(self, course):
+        self.courses.append(course)
+        self.balance += course.fee
+
+    def drop_course(self, course):
+        if course in self.courses:
+            self.courses.remove(course)
+            self.balance -= course.fee
 
 class RegistrationSystem:
     def __init__(self):
-        self.courses = []    # List of available courses
-        self.students = {}   # Dictionary of registered students
+        self.courses = []
+        self.students = {}
+
+    def validate_email(self, email):
+        pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        return re.match(pattern, email)
 
     def add_course(self):
         course_id = input("Enter Course ID: ")
@@ -34,7 +49,11 @@ class RegistrationSystem:
             print(f"Error: Course ID {course_id} already exists.")
             return
         name = input("Enter Course Name: ")
-        fee = float(input("Enter Course Fee: "))
+        try:
+            fee = float(input("Enter Course Fee: "))
+        except ValueError:
+            print("Error: Fee must be a valid number.")
+            return
         course = Course(course_id, name, fee)
         self.courses.append(course)
         print(f"Course '{name}' added successfully.")
@@ -46,14 +65,29 @@ class RegistrationSystem:
             return
         name = input("Enter Student Name: ")
         email = input("Enter Student Email: ")
+        if not self.validate_email(email):
+            print("Error: Invalid email format.")
+            return
         student = Student(student_id, name, email)
         self.students[student_id] = student
         print(f"Student '{name}' successfully registered.")
 
+    def deregister_student(self):
+        student_id = input("Enter Student ID to Deregister: ")
+        student = self.students.get(student_id)
+        if not student:
+            print("Error: Student not found.")
+            return
+        # Remove student from all enrolled courses
+        for course in student.courses:
+            course.remove_student(student)
+        del self.students[student_id]
+        print(f"Student '{student.name}' has been successfully deregistered.")
+
     def show_registered_students(self):
         print("Registered Students:")
         for student_id, student in self.students.items():
-            print(f"{student_id} - {student.name} (Email: {student.email})")
+            print(f"{student_id} - {student.name} (Email: {student.email}) Balance: ${student.balance:.2f}")
 
     def enroll_in_course(self):
         student_id = input("Enter Student ID: ")
@@ -66,10 +100,30 @@ class RegistrationSystem:
         if not course:
             print("Error: Course not found.")
             return
+        if course in student.courses:
+            print(f"Error: Student is already enrolled in '{course.name}'.")
+            return
         course.add_student(student)
-        student.courses.append(course)
-        student.balance += course.fee
-        print(f"Student '{student.name}' enrolled in '{course.name}' balance: $'{student.balance}'.")
+        student.enroll_in_course(course)
+        print(f"Student '{student.name}' enrolled in '{course.name}'. New Balance: ${student.balance:.2f}")
+
+    def drop_course(self):
+        student_id = input("Enter Student ID: ")
+        student = self.students.get(student_id)
+        if not student:
+            print("Error: Student not found.")
+            return
+        course_id = input("Enter Course ID: ")
+        course = next((c for c in self.courses if c.course_id == course_id), None)
+        if not course:
+            print("Error: Course not found.")
+            return
+        if course not in student.courses:
+            print(f"Error: Student is not enrolled in '{course.name}'.")
+            return
+        course.remove_student(student)
+        student.drop_course(course)
+        print(f"Student '{student.name}' dropped from '{course.name}'. New Balance: ${student.balance:.2f}")
 
     def calculate_payment(self):
         student_id = input("Enter Student ID: ")
@@ -77,13 +131,17 @@ class RegistrationSystem:
         if not student:
             print("Error: Student not found.")
             return
-        print(f"Outstanding Balance: {student.balance}")
-        payment = float(input("Enter Payment Amount: "))
+        print(f"Outstanding Balance: ${student.balance:.2f}")
+        try:
+            payment = float(input("Enter Payment Amount: "))
+        except ValueError:
+            print("Error: Payment must be a valid number.")
+            return
         if payment < 0.4 * student.balance:
             print("Error: Payment must be at least 40% of the outstanding balance.")
             return
         student.balance -= payment
-        print(f"Payment successful. Remaining balance: ${student.balance}")
+        print(f"Payment successful. Remaining Balance: ${student.balance:.2f}")
 
     def show_courses(self):
         if not self.courses:
@@ -91,9 +149,8 @@ class RegistrationSystem:
             return
         print("Available Courses:")
         for course in self.courses:
-            print(f"{course.course_id} - {course.name} (Fee: ${course.fee})")
+            print(f"{course.course_id} - {course.name} (Fee: ${course.fee:.2f})")
 
-    # Main menu
     def show_menu(self):
         while True:
             print('+--------------------------------------------------------+')
@@ -105,12 +162,14 @@ class RegistrationSystem:
             print('|    1. Register Student and Manage Details              |')
             print('|    2. Add Courses                                      |')
             print('|    3. Student Course Enrollment                        |')
-            print('|    4. Make Payment                                     |')
-            print('|    5. View Enrolled Students                           |')
-            print('|    6. View Courses                                     |')
+            print('|    4. Drop Course                                      |')
+            print('|    5. Make Payment                                     |')
+            print('|    6. View Enrolled Students                           |')
+            print('|    7. View Courses                                     |')
+            print('|    8. Deregister Student                               |')
             print('|    Q. Exit                                             |')
             print('+--------------------------------------------------------+')
-            option = input("Enter a selection [1-6 or Q]: ").strip().lower()
+            option = input("Enter a selection [1-8 or Q]: ").strip().lower()
             if option == '1':
                 self.register_student()
             elif option == '2':
@@ -118,18 +177,21 @@ class RegistrationSystem:
             elif option == '3':
                 self.enroll_in_course()
             elif option == '4':
-                self.calculate_payment()
+                self.drop_course()
             elif option == '5':
-                self.show_registered_students()
+                self.calculate_payment()
             elif option == '6':
+                self.show_registered_students()
+            elif option == '7':
                 self.show_courses()
+            elif option == '8':
+                self.deregister_student()
             elif option == 'q':
                 print("Exiting the system. Goodbye!")
                 break
             else:
                 print("Invalid choice. Please try again.")
 
-# Main program
 if __name__ == "__main__":
     system = RegistrationSystem()
     system.show_menu()
