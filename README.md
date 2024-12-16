@@ -1,25 +1,87 @@
-1.
+Author
 
-i. 	Author: Nzinga Lloyd
-ii. 	Date Created: 12/12/2024
-iii.	Course: Programming Techniques ITT103
-iV. 	GitHub Public URL to Code:https://github.com/Nzinga-coder2/Lloyd.Nzinga-Course_Registration-ITT103-F2024.py.git
+Nzinga Lloyd
 
-2. 
-Program Purpose
-The program's goal is to give administrators the ability to build courses with their own descriptions, which include the course name, code, and price. Additionally, the platform will enable administrative personnel to establish student profiles that contain the student's name, ID, and email address. 
+Date Created
 
-Students can also use the program to track their balance owed to the institution and enroll in classes. Payments made by the student after enrollment must equal at least 40% of the remaining debt; else, an error message will appear.
+December 15, 2024
 
-In addition, the administrator can check individual student balances, course information, and enrolled students. 
+Course
 
-Additionally, the application performs validation to ensure that a student ID or courae code cannot be copied. Additionally, the system will indicate that the code does not exist when trying to assign if a course code or student ID was not created. 
+ITT103
 
-How does the program work?
-The user must choose the number that corresponds to the desired option from the menu that appears and hit Enter to execute the code. To push a response, press enter after each entry. 
+GitHub Public URL to Code
+
+[(https://github.com/Nzinga-coder2/Lloyd.Nzinga-Course_Registration-ITT103-F2024.py)]
+
+Purpose of the Program
+
+The Course Registration and Student Portal is a Python-based program designed to manage student registration, course enrollment, payment processing, and student deregistration for UCC. Additionally, the platform will enable administrative personnel to establish student profiles that contain the student's name, ID, and email address. Students can also use the program to track their balance owed to the institution and enroll in classes. Payments made by the student after enrollment must equal at least 40% of the remaining debt; else, an error message will appear.
+
+It implements key Object-Oriented Programming (OOP) principles such as encapsulation, modular design, and abstraction to ensure maintainable and reusable code.
+
+Features:
+
+Register Students: Add new students with unique IDs, names, and email addresses.
+
+Add Courses: Create new courses with unique IDs, names, and fees.
+
+Enroll in Courses: Link students to courses and automatically update their outstanding balance.
+
+Deregister Students: Remove a student from the system and all associated courses.
+
+Make Payments: Process payments towards a student’s balance with a minimum threshold.
+
+View Information:
+
+View all registered students and their details.
+
+View all available courses and their fees.
+
+How to Run the Program
+
+Requirements:
+
+Python Version: The program requires Python 3.7 or later.
+
+Instructions:
+
+Clone or download the program files from the GitHub repository.
+
+Navigate to the directory containing the program file (Lloyd.Nzinga-Course_Registration-ITT103-F2024.py).
+
+Open a terminal or command prompt and run the program 
+
+Follow the menu prompts to interact with the system.
 
 Assumptions
-The ability to add a student, add a course, see course details, and examine student balances is presumed to be limited to administrators. 
 
-Limitions
-The application does not keep track of user activity and lacks restrictions over which user gets access to which menu selections. A student can be enrolled more than once for a course, the program does not recognize a duplication. Additonally, neither a student or a course can be deleted.  
+Student IDs and Course IDs:
+
+Both IDs are unique across the system and manually entered.
+
+Email Validation:
+
+Emails are expected to conform to standard email formatting rules.
+
+Payment Threshold:
+
+Payments must meet a minimum of 40% of the student’s outstanding balance.
+
+Limitations
+
+No Database Integration:
+
+The system uses in-memory data storage and does not persist data between sessions.
+
+Limited Input Validation:
+
+User inputs like names or IDs are not heavily validated beyond uniqueness.
+
+Concurrent Access:
+
+The system does not support concurrent multi-user access.
+
+Dependencies: 
+
+The program uses the built-in re module for email validation, so no external libraries need to be installed.
